@@ -6,6 +6,8 @@ async function start() {
 
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('/api');
+
   app.listen(PORT, () => console.log(`Сервер слушает порт ${PORT}`));
 }
 
