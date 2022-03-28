@@ -1,16 +1,23 @@
-import { Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreateBookQueryDto } from '../dto/createBookQuery.dto';
-import { GetBooksQueryDto } from '../dto/getBooksQuery.dto';
 import { UpdateBookQueryDto } from '../dto/updateBookQuery.dto';
 import { BooksService } from '../services/books.service';
 
-@Controller('/books')
+@Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  getBooks(getBooksQueryDto: GetBooksQueryDto) {
-    return this.booksService.getBooks(getBooksQueryDto);
+  getBooks() {
+    return this.booksService.getBooks();
   }
 
   @Get('/:id')
@@ -19,12 +26,15 @@ export class BooksController {
   }
 
   @Post()
-  createBook(createBookQueryDto: CreateBookQueryDto) {
+  createBook(@Body() createBookQueryDto: CreateBookQueryDto) {
     return this.booksService.createBook(createBookQueryDto);
   }
 
   @Put('/:id')
-  updateBook(@Query('id') id: string, updateBookQueryDto: UpdateBookQueryDto) {
+  updateBook(
+    @Query('id') id: string,
+    @Body() updateBookQueryDto: UpdateBookQueryDto,
+  ) {
     return this.booksService.updateBook(id, updateBookQueryDto);
   }
 

@@ -1,0 +1,11 @@
+{
+   "type": "postgresql",
+   "host": "localhost",
+   "port": 5432,
+   "username": "postgres",
+   "password": "postgres123",
+   "database": "library_test",
+   "entities": [
+     "src/entities/**/*.ts"
+   ]
+}
