@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import 'reflect-metadata';
 
 async function start() {
   const PORT = process.env.PORT || 5000;

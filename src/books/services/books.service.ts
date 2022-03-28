@@ -1,81 +1,41 @@
-import { HttpException, HttpService, Injectable } from '@nestjs/common';
-import { AxiosResponse } from 'axios';
-import { catchError, map, Observable } from 'rxjs';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { CreateBookQueryDto } from '../dto/createBookQuery.dto';
 import { UpdateBookQueryDto } from '../dto/updateBookQuery.dto';
+import { Book } from '../entities/books.entities';
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    @Inject('BOOKS_REPOSITORY')
+    private booksRepository: Repository<Book>,
+  ) {}
 
-  getBooks(getBooksQueryDto): Observable<AxiosResponse<Record<string, any>>> {
-    return this.httpService
-      .get('/books', {
-        params: getBooksQueryDto,
-      })
-      .pipe(
-        map((response) => response?.data),
-        catchError((e) => {
-          throw new HttpException(
-            e?.response?.data,
-            e?.response?.status ?? 500,
-          );
-        }),
-      );
+  async getBooks() {
+    return this.booksRepository.find();
   }
 
-  getBook(id: string): Observable<AxiosResponse<Record<string, any>>> {
-    return this.httpService.get(`/books/${id}`).pipe(
-      map((response) => response?.data),
-      catchError((e) => {
-        throw new HttpException(e?.response?.data, e?.response?.status ?? 500);
-      }),
-    );
+  async getBook(id: string) {
+    return this.booksRepository.findOne(id);
   }
 
-  createBook(
-    createBookQueryDto: CreateBookQueryDto,
-  ): Observable<AxiosResponse<Record<string, any>>> {
-    return this.httpService
-      .post('/books', {
-        ...createBookQueryDto,
-      })
-      .pipe(
-        map((response) => response?.data),
-        catchError((e) => {
-          throw new HttpException(
-            e?.response?.data,
-            e?.response?.status ?? 500,
-          );
-        }),
-      );
+  async createBook(createBookQueryDto: CreateBookQueryDto) {
+    console.log(createBookQueryDto);
+    const book = this.booksRepository.create({
+      title: createBookQueryDto.title,
+      author: createBookQueryDto.author,
+    });
+
+    return this.booksRepository.save(book);
   }
 
-  updateBook(
-    id: string,
-    updateBookQueryDto: UpdateBookQueryDto,
-  ): Observable<AxiosResponse<Record<string, any>>> {
-    return this.httpService
-      .put(`/books/${id}`, {
-        ...updateBookQueryDto,
-      })
-      .pipe(
-        map((response) => response?.data),
-        catchError((e) => {
-          throw new HttpException(
-            e?.response?.data,
-            e?.response?.status ?? 500,
-          );
-        }),
-      );
+  async updateBook(id: string, updateBookQueryDto: UpdateBookQueryDto) {
+    const book = await this.booksRepository.findOne(id);
+    Object.assign(book, updateBookQueryDto);
+    return this.booksRepository.save(book);
   }
 
-  deleteBook(id: string): Observable<AxiosResponse<Record<string, any>>> {
-    return this.httpService.delete(`/books/${id}`).pipe(
-      map((response) => response?.data),
-      catchError((e) => {
-        throw new HttpException(e?.response?.data, e?.response?.status ?? 500);
-      }),
-    );
+  async deleteBook(id: string) {
+    return this.booksRepository.delete(id);
   }
 }
