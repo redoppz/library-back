@@ -5,4 +5,4 @@
 3. Запустить подключение к БД: `docker-compose up`
 4. Запустить сервис: `npm run start:dev`
 
-Документация лежит на `localhost:5000/api/docs`
+Документация лежит на `localhost:5000/api/doc`
