@@ -8,7 +8,7 @@ import { Book } from '../entities/books.entities';
 export class BooksService {
   constructor(
     @Inject('BOOKS_REPOSITORY')
-    private booksRepository: Repository<Book>,
+    private booksRepository: Repository<Book>
   ) {}
 
   async getBooks() {
@@ -23,7 +23,7 @@ export class BooksService {
     console.log(createBookQueryDto);
     const book = this.booksRepository.create({
       title: createBookQueryDto.title,
-      author: createBookQueryDto.author,
+      author: createBookQueryDto.author
     });
 
     return this.booksRepository.save(book);
