@@ -1,6 +1,7 @@
 import { createConnection } from 'typeorm';
 import { Book } from './books/entities/books.entities';
 import { config } from './config/config';
+import { User } from './users/entities/users.entity';
 
 export const databaseProviders = [
   {
@@ -13,8 +14,8 @@ export const databaseProviders = [
         username: config.username,
         password: config.password,
         database: config.database,
-        entities: [Book],
-        synchronize: true,
-      }),
-  },
+        entities: [Book, User],
+        synchronize: true
+      })
+  }
 ];
